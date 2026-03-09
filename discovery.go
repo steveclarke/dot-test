@@ -55,6 +55,27 @@ func detectHardcodedPort(dir, app string) int {
 		}
 	}
 
+	// Check mothership/foreman TOML manifests for http bind address
+	for _, manifest := range []string{"ship-manifest.dev.toml", "ship-manifest.toml", "Procfile.toml"} {
+		if content, err := os.ReadFile(filepath.Join(appDir, manifest)); err == nil {
+			s := string(content)
+			// Match http = "host:port" or listen = "host:port"
+			if port := matchPort(s, `(?:http|listen)\s*=\s*"[^"]*:(\d+)"`); port > 0 && !defaultPorts[port] {
+				return port
+			}
+		}
+	}
+
+	// Check docker-compose.yml for port mappings on web service
+	for _, compose := range []string{"docker-compose.yml", "docker-compose.dev.yml", "compose.yml"} {
+		if content, err := os.ReadFile(filepath.Join(appDir, compose)); err == nil {
+			s := string(content)
+			if port := matchPort(s, `"(\d+):(?:3000|8080)"`); port > 0 && !defaultPorts[port] {
+				return port
+			}
+		}
+	}
+
 	return 0
 }
 
