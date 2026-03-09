@@ -1,0 +1,34 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  update-tap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.TAP_DEPLOY_KEY }}
+
+      - name: Checkout tap
+        run: git clone git@github.com:zarpay/homebrew-tap.git tap
+
+      - name: Update formula tag
+        run: |
+          cd tap
+          sed -i "s|tag: \"v[^\"]*\"|tag: \"${{ github.ref_name }}\"|" Formula/dot-test.rb
+          cat Formula/dot-test.rb
+
+      - name: Commit and push
+        run: |
+          cd tap
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/dot-test.rb
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Bump dot-test to ${{ github.ref_name }}"
+          git push
