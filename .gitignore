@@ -1,1 +1,4 @@
 dot-test
+dist/
+.dot-test
+.dot-test-pid
