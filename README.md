@@ -8,7 +8,7 @@ http://nexus.test    instead of    http://localhost:3013
 http://praxis.test   instead of    http://localhost:3002
 ```
 
-dot-test automatically discovers Rails projects in your `~/projects` directory, assigns stable port numbers, and runs a local DNS server + HTTP reverse proxy so `*.test` domains route to the right backend.
+dot-test automatically discovers Rails projects in the current directory, assigns stable port numbers, and runs a local DNS server + HTTP reverse proxy so `*.test` domains route to the right backend.
 
 Zero dependencies. Single binary. Works with however you start your apps.
 
@@ -27,6 +27,7 @@ go install github.com/zarpay/dot-test@latest
 ## Quickstart
 
 ```sh
+cd ~/projects         # or wherever your apps live
 dot-test setup        # one-time macOS DNS config (needs sudo)
 dot-test sync         # discover projects, assign ports
 dot-test up           # start the daemon
@@ -36,7 +37,7 @@ Open `http://yourapp.test` in your browser.
 
 ## How It Works
 
-1. **Discover** — Scans `~/projects` for Rails apps (looks for `config/application.rb`)
+1. **Discover** — Scans your projects directory for Rails apps (looks for `config/application.rb`)
 2. **Assign** — Gives each app a stable port number starting from 3000, persisted across runs
 3. **Update** — Writes `PORT=<assigned>` to each app's `.env` file
 4. **Route** — Runs a DNS server (`.test` → `127.0.0.1`) and HTTP proxy (hostname → port)
@@ -58,7 +59,7 @@ dot-test help      Show help
 
 ## Port Assignment
 
-Ports are assigned sequentially starting from 3000 and persist in `~/projects/.dot-test`.
+Ports are assigned sequentially starting from 3000 and persist in a `.dot-test` file inside your projects directory.
 
 dot-test respects hardcoded ports. Before assigning, it checks:
 
@@ -91,7 +92,7 @@ Done. Run 'dot-test up' to start the daemon.
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DOT_TEST_DIR` | `~/projects` | Directory to scan for projects |
+| `DOT_TEST_DIR` | current directory | Directory to scan for projects |
 | `DOT_TEST_PORT` | `80` | HTTP proxy listen port |
 | `DOT_TEST_DNS_PORT` | `15353` | DNS server listen port |
 

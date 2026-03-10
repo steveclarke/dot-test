@@ -17,8 +17,7 @@ type Config struct {
 func loadConfig() Config {
 	dir := os.Getenv("DOT_TEST_DIR")
 	if dir == "" {
-		home, _ := os.UserHomeDir()
-		dir = filepath.Join(home, "projects")
+		dir, _ = os.Getwd()
 	}
 
 	proxyPort := 80

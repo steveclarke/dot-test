@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-const version = "0.1.0"
+const version = "0.2.0"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -49,7 +49,7 @@ Usage:
   dot-test clean     Remove all config and stop daemon
 
 Environment:
-  DOT_TEST_DIR       Projects directory (default: ~/projects)
+  DOT_TEST_DIR       Projects directory (default: current directory)
   DOT_TEST_PORT      Proxy listen port (default: 80)
   DOT_TEST_DNS_PORT  DNS listen port (default: 15353)
 
