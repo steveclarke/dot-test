@@ -15,7 +15,7 @@ Zero dependencies. Single binary. Works with however you start your apps.
 ## Install
 
 ```sh
-brew install dot-test
+brew install zarpay/tap/dot-test
 ```
 
 Or build from source:
